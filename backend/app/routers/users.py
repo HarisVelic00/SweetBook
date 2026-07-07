@@ -4,7 +4,9 @@ from app.core.database import get_db
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
 from app.crud import user as crud
 
+
 router = APIRouter(prefix="/users", tags=["Users"])
+
 
 @router.post("/", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):

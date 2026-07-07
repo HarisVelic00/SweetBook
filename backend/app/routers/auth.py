@@ -5,7 +5,9 @@ from app.core.security import hash_password, verify_password, create_access_toke
 from app.models.user import User
 from app.schemas.auth import RegisterRequest, LoginRequest, TokenResponse
 
+
 router = APIRouter(prefix="/auth", tags=["Auth"])
+
 
 @router.post("/register")
 def register(user: RegisterRequest, db: Session = Depends(get_db)):
@@ -25,7 +27,6 @@ def register(user: RegisterRequest, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     return {"message": "User created successfully"}
-
 
 
 @router.post("/login", response_model=TokenResponse)

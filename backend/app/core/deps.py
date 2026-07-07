@@ -2,13 +2,12 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
-
 from app.core.database import get_db
 from app.core.config import SECRET_KEY, ALGORITHM
 from app.models.user import User
 
-security = HTTPBearer()
 
+security = HTTPBearer()
 
 
 def get_current_user(
