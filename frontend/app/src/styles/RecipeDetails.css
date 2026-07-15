@@ -1,0 +1,137 @@
+.recipe-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.back-button {
+  width: fit-content;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background: #e5e7eb;
+}
+
+.recipe-details-header {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.recipe-details-header h1 {
+  margin: 0;
+  font-size: 36px;
+}
+
+.recipe-details-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 18px;
+}
+
+.recipe-image {
+  height: 300px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #6b7280;
+}
+
+.recipe-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.recipe-section h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.recipe-section p {
+  margin: 0;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+.recipe-section ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.recipe-section li {
+  margin-bottom: 8px;
+}
+
+.rating-stars {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.rating-stars span {
+  transition: transform 0.2s ease;
+}
+
+.rating-stars span:hover {
+  transform: scale(1.15);
+}
+
+.comment-input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ddd6fe;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+.comment-button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #6366f1;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comment-button:hover {
+  background-color: #3f46e5;
+}
+
+.comment {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.comment strong {
+  font-size: 16px;
+}
+
+.comment p {
+  margin-top: 6px;
+}

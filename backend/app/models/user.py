@@ -15,6 +15,22 @@ class User(Base):
 
     password_hash = Column(String(255), nullable=False)
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
 
-    recipes = relationship("Recipe", back_populates="owner")
+    recipes = relationship(
+        "Recipe", back_populates="owner", cascade="all, delete-orphan"
+    )
+
+    favorites = relationship(
+        "Favorite", back_populates="user", cascade="all, delete-orphan"
+    )
+
+    comments = relationship(
+        "Comment", back_populates="user", cascade="all, delete-orphan"
+    )
+
+    ratings = relationship(
+        "Rating", back_populates="user", cascade="all, delete-orphan"
+    )

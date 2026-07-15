@@ -15,8 +15,7 @@ def create_recipe(db: Session, recipe: RecipeCreate, user_id: int):
         description=recipe.description,
         instructions=recipe.instructions,
         category_id=recipe.category_id,
-        image_url=recipe.image_url,
-        user_id=user_id
+        user_id=user_id,
     )
 
     db.add(db_recipe)
@@ -34,11 +33,12 @@ def get_recipe(db: Session, recipe_id: int):
     return db.query(Recipe).filter(Recipe.id == recipe_id).first()
 
 
+def get_recipe_by_id(db: Session, recipe_id: int):
+    return db.query(Recipe).filter(Recipe.id == recipe_id).first()
+
+
 def update_recipe(
-    db: Session,
-    recipe_id: int,
-    recipe_update: RecipeUpdate,
-    user_id: int
+    db: Session, recipe_id: int, recipe_update: RecipeUpdate, user_id: int
 ):
     recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
 
@@ -49,7 +49,9 @@ def update_recipe(
         return None
 
     if recipe_update.category_id:
-        category = db.query(Category).filter(Category.id == recipe_update.category_id).first()
+        category = (
+            db.query(Category).filter(Category.id == recipe_update.category_id).first()
+        )
 
         if not category:
             return None

@@ -6,13 +6,12 @@ from app.core.database import get_db
 from app.core.config import SECRET_KEY, ALGORITHM
 from app.models.user import User
 
-
 security = HTTPBearer()
 
 
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     token = credentials.credentials
 

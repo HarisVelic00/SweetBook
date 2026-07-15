@@ -4,11 +4,7 @@ from app.schemas.comment import CommentCreate
 
 
 def create_comment(db: Session, comment: CommentCreate, user_id: int, recipe_id: int):
-    db_comment = Comment(
-        text=comment.text,
-        user_id=user_id,
-        recipe_id=recipe_id
-    )
+    db_comment = Comment(text=comment.text, user_id=user_id, recipe_id=recipe_id)
 
     db.add(db_comment)
     db.commit()

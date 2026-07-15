@@ -6,7 +6,6 @@ from app.core.security import verify_password, hash_password
 from app.models.user import User
 from app.schemas.user import UserChangePassword, UserResponse
 
-
 router = APIRouter(prefix="/profile", tags=["Profile"])
 
 
@@ -20,7 +19,7 @@ def update_me(
     username: str,
     email: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     current_user.username = username
     current_user.email = email
@@ -35,7 +34,7 @@ def update_me(
 def change_password(
     data: UserChangePassword,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     if not verify_password(data.current_password, current_user.password_hash):
         raise HTTPException(status_code=400, detail="Incorrect password")

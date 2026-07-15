@@ -7,7 +7,6 @@ class RecipeCreate(BaseModel):
     description: str | None = None
     instructions: str
     category_id: int
-    image_url: str | None = None
 
 
 class RecipeUpdate(BaseModel):
@@ -15,7 +14,6 @@ class RecipeUpdate(BaseModel):
     description: str | None = None
     instructions: str | None = None
     category_id: int | None = None
-    image_url: str | None = None
 
 
 class RecipeResponse(BaseModel):
@@ -24,7 +22,6 @@ class RecipeResponse(BaseModel):
     description: str | None
     instructions: str
     category_id: int
-    image_url: str | None
     created_at: datetime
     updated_at: datetime
     user_id: int

@@ -2,3 +2,8 @@ from app.models.user import User
 from app.models.recipe import Recipe
 from app.models.category import Category
 from app.models.comment import Comment
+from app.models.favorite import Favorite
+from app.models.rating import Rating
+from app.models.ingredient import Ingredient
+from app.models.recipe_ingredient import RecipeIngredient
+from app.models.recipe_image import RecipeImage

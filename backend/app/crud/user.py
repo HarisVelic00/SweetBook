@@ -5,9 +5,7 @@ from app.schemas.user import UserCreate, UserUpdate
 
 def create_user(db: Session, user: UserCreate):
     db_user = User(
-        username=user.username,
-        email=user.email,
-        password_hash=user.password 
+        username=user.username, email=user.email, password_hash=user.password
     )
 
     db.add(db_user)
@@ -30,7 +28,7 @@ def update_user(db: Session, user_id: int, user: UserUpdate):
 
     if db_user is None:
         return None
-    
+
     db_user.username = user.username
     db_user.email = user.email
 
@@ -40,13 +38,13 @@ def update_user(db: Session, user_id: int, user: UserUpdate):
     return db_user
 
 
-def delete_user (db: Session, user_id: int):
+def delete_user(db: Session, user_id: int):
     db_user = get_user_by_id(db, user_id)
 
     if db_user is None:
         return None
-    
+
     db.delete(db_user)
     db.commit()
-    
+
     return db_user

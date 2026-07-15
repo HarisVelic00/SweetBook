@@ -4,7 +4,6 @@ from app.core.database import get_db
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
 from app.crud import user as crud
 
-
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
@@ -45,5 +44,5 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     return db_user

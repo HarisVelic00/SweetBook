@@ -9,7 +9,7 @@ class Recipe(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    title = Column (String(255), nullable=False)
+    title = Column(String(255), nullable=False)
 
     description = Column(Text, nullable=True)
 
@@ -17,15 +17,41 @@ class Recipe(Base):
 
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
 
-    image_url = Column(String(500),nullable=True)
+    images = relationship(
+        "RecipeImage", back_populates="recipe", cascade="all, delete-orphan"
+    )
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
 
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
 
     owner = relationship("User", back_populates="recipes")
 
     category = relationship("Category", back_populates="recipes")
-                   
+
+    favorites = relationship(
+        "Favorite", back_populates="recipe", cascade="all, delete-orphan"
+    )
+
+    comments = relationship(
+        "Comment", back_populates="recipe", cascade="all, delete-orphan"
+    )
+
+    ratings = relationship(
+        "Rating", back_populates="recipe", cascade="all, delete-orphan"
+    )
+
+    ingredients = relationship(
+        "RecipeIngredient", back_populates="recipe", cascade="all, delete-orphan"
+    )

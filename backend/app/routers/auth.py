@@ -5,7 +5,6 @@ from app.core.security import hash_password, verify_password, create_access_toke
 from app.models.user import User
 from app.schemas.auth import RegisterRequest, LoginRequest, TokenResponse
 
-
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
@@ -15,11 +14,11 @@ def register(user: RegisterRequest, db: Session = Depends(get_db)):
 
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already exists")
-    
+
     new_user = User(
         username=user.username,
         email=user.email,
-        password_hash=hash_password(user.password)
+        password_hash=hash_password(user.password),
     )
 
     db.add(new_user)
@@ -35,13 +34,10 @@ def login(user: LoginRequest, db: Session = Depends(get_db)):
 
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    
+
     if not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    
+
     token = create_access_token({"sub": str(db_user.id)})
 
-    return {
-    "access_token": token,
-    "token_type": "bearer"
-}
+    return {"access_token": token, "token_type": "bearer"}

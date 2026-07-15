@@ -1,0 +1,29 @@
+.user-recipe-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: 0.2s ease;
+}
+
+.user-recipe-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  border-color: #8b5cf6;
+}
+
+.user-recipe-card-header h3 {
+  margin: 0;
+}
+
+.user-recipe-card-header p {
+  margin:
+    5px,
+    0 20px;
+  color: #6b7280;
+}
+
+.user-recipe-card-footer {
+  font-weight: bold;
+  color: #4b5563;
+}
