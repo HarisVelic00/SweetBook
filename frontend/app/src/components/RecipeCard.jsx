@@ -1,20 +1,21 @@
 import "../components/RecipeCard.css";
 import { useNavigate } from "react-router-dom";
 
-function RecipeCard() {
+function RecipeCard({ recipe }) {
   const navigate = useNavigate();
 
   return (
-    <div className="recipe-card" onClick={() => navigate("/home/recipes/1")}>
+    <div
+      className="recipe-card"
+      onClick={() => navigate(`/home/recipes/${recipe.id}`)}
+    >
       <div className="recipe-card-header">
-        <h2>Kinder Pingui</h2>
-        <p className="recipe-category">Cake</p>
+        <h2>{recipe.title}</h2>
+        <p className="recipe-category">{recipe.category_name}</p>
       </div>
 
       <div className="recipe-card-body">
-        <p className="recipe-description">
-          A chilled, layered dessert inspired by the popular Kinder bar
-        </p>
+        <p className="recipe-description">{recipe.description}</p>
       </div>
 
       <div className="recipe-card-footer">

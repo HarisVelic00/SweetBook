@@ -1,32 +1,47 @@
 import "../styles/RecipeDetails.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { API_URL } from "../api/api.js";
 
 function RecipeDetails() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [recipe, setRecipe] = useState(null);
+
+  useEffect(() => {
+    async function fetchRecipe() {
+      const response = await fetch(`${API_URL}/recipes/${id}`);
+      const data = await response.json();
+
+      setRecipe(data);
+    }
+    fetchRecipe();
+  });
+
+  if (!recipe) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div className="recipe-details">
       <button className="back-button" onClick={() => navigate("/home/recipes")}>
         ← Back to Recipes
       </button>
       <div className="recipe-details-header">
-        <h1>Kinder Pingui</h1>
-        <p>Cake</p>
+        <h1>{recipe.title}</h1>
+        <p>{recipe.category_name}</p>
       </div>
 
       <div className="recipe-image">Image</div>
 
       <div className="recipe-section">
         <h2>Description</h2>
-        <p>A chilled, layered dessert inspired by the popular Kinder bar.</p>
+        <p>{recipe.description}</p>
       </div>
 
       <div className="recipe-section">
         <h2>Instructions</h2>
-        <p>
-          Bake a moist chocolate sponge, layer it with a rich, fluffy
-          milk-and-honey cream, and top it with a crackly chocolate
-          ganache.{" "}
-        </p>
+        <p>{recipe.instructions}</p>
       </div>
 
       <div className="recipe-section">

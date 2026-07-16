@@ -22,6 +22,7 @@ class RecipeResponse(BaseModel):
     description: str | None
     instructions: str
     category_id: int
+    category_name: str
     created_at: datetime
     updated_at: datetime
     user_id: int

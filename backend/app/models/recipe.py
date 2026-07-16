@@ -55,3 +55,7 @@ class Recipe(Base):
     ingredients = relationship(
         "RecipeIngredient", back_populates="recipe", cascade="all, delete-orphan"
     )
+
+    @property
+    def category_name(self):
+        return self.category.name
