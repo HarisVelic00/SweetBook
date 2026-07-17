@@ -1,6 +1,6 @@
 import "../styles/Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { API_URL } from "../api/api";
 
 function Login() {
@@ -43,10 +43,14 @@ function Login() {
 
       const data = await response.json();
 
+      console.log(data);
+
       if (!response.ok) {
         showMessage(data.detail, "error");
         return;
       }
+
+      localStorage.setItem("token", data.access_token);
 
       showMessage("Login successful!", "success");
 

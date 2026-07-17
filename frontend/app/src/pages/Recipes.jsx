@@ -9,13 +9,14 @@ function Recipes() {
   const [recipes, setRecipes] = useState([]);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    async function fetchRecipes() {
-      const response = await fetch(`${API_URL}/recipes/`);
-      const data = await response.json();
+  async function fetchRecipes() {
+    const response = await fetch(`${API_URL}/recipes/`);
+    const data = await response.json();
 
-      setRecipes(data);
-    }
+    setRecipes(data);
+  }
+
+  useEffect(() => {
     fetchRecipes();
   }, []);
 
@@ -56,7 +57,12 @@ function Recipes() {
         ))}
       </div>
 
-      {isModalOpen && <AddRecipeModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <AddRecipeModal
+          onClose={() => setIsModalOpen(false)}
+          refreshRecipes={fetchRecipes}
+        />
+      )}
     </div>
   );
 }

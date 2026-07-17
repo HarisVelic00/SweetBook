@@ -14,6 +14,7 @@ class RecipeIngredientResponse(BaseModel):
     id: int
     recipe_id: int
     ingredient_id: int
+    ingredient_name: str
     quantity: str | None = None
 
     class Config:

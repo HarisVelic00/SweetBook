@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
+import os
+import shutil
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
@@ -13,7 +15,7 @@ router = APIRouter(tags=["Recipe Images"])
 @router.post("/recipes/{recipe_id}/images", response_model=RecipeImageResponse)
 def add_recipe_image(
     recipe_id: int,
-    image: RecipeImageCreate,
+    file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -25,11 +27,28 @@ def add_recipe_image(
 
     if recipe.user_id != current_user.id:
         raise HTTPException(
-            status_code=403, detail="You are not the owner of this recipe."
+            status_code=403,
+            detail="You are not the owner of this recipe."
         )
 
-    return crud.create_recipe_image(db, recipe_id, image)
+    upload_folder = "uploads/recipes"
 
+    os.makedirs(upload_folder, exist_ok=True)
+
+    file_path = f"{upload_folder}/{file.filename}"
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    image_data = RecipeImageCreate(
+        url=f"/{file_path}"
+    )
+
+    return crud.create_recipe_image(
+        db,
+        recipe_id,
+        image_data
+    )
 
 @router.get("/recipes/{recipe_id}/images", response_model=list[RecipeImageResponse])
 def get_recipe_images(recipe_id: int, db: Session = Depends(get_db)):

@@ -26,3 +26,7 @@ class RecipeIngredient(Base):
     __table_args__ = (
         UniqueConstraint("recipe_id", "ingredient_id", name="unique_recipe_ingredient"),
     )
+
+    @property
+    def ingredient_name(self):
+        return self.ingredient.name

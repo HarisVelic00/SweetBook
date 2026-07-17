@@ -15,8 +15,9 @@ function RecipeDetails() {
 
       setRecipe(data);
     }
+
     fetchRecipe();
-  });
+  }, [id]);
 
   if (!recipe) {
     return <p>Loading...</p>;
@@ -32,7 +33,15 @@ function RecipeDetails() {
         <p>{recipe.category_name}</p>
       </div>
 
-      <div className="recipe-image">Image</div>
+      {recipe.images.length > 0 ? (
+        <img
+          src={`${API_URL}${recipe.images[0].url}`}
+          alt={recipe.title}
+          className="recipe-image"
+        />
+      ) : (
+        <div className="recipe-image">No image available</div>
+      )}
 
       <div className="recipe-section">
         <h2>Description</h2>
@@ -46,13 +55,17 @@ function RecipeDetails() {
 
       <div className="recipe-section">
         <h2>Ingredients</h2>
-        <ul>
-          <li>Eggs</li>
-          <li>Sugar</li>
-          <li>Flour</li>
-          <li>Milk</li>
-          <li>Chocolate</li>
-        </ul>
+        {recipe.ingredients.length === 0 ? (
+          <p>No ingredients added yet.</p>
+        ) : (
+          <ul>
+            {recipe.ingredients.map((ingredient) => (
+              <li key={ingredient.id}>
+                {ingredient.quantity} {ingredient.ingredient_name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="recipe-section">

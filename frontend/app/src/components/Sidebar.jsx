@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 function Sidebar() {
   const navigate = useNavigate();
   function handleLogout() {
+    localStorage.removeItem("token");
     navigate("/");
   }
 

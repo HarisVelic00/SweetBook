@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
+
 from app.routers import (
     users,
     auth,
@@ -15,6 +18,18 @@ from app.routers import (
 )
 
 app = FastAPI()
+
+import os
+
+os.makedirs("uploads/recipes", exist_ok=True)
+
+
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads"),
+    name="uploads"
+)
 
 app.add_middleware(
     CORSMiddleware,
