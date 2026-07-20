@@ -9,7 +9,7 @@ from app.crud import comment as crud
 router = APIRouter(prefix="/comments", tags=["Comments"])
 
 
-@router.post("/recipes/{recipe_id}", response_model=CommentCreate)
+@router.post("/recipes/{recipe_id}", response_model=CommentResponse)
 def create_comment(
     recipe_id: int,
     comment: CommentCreate,
@@ -22,7 +22,7 @@ def create_comment(
     return new_comment
 
 
-@router.get("/{comment_id}", response_model=list[CommentResponse])
+@router.get("/recipes/{recipe_id}", response_model=list[CommentResponse])
 def get_comments(recipe_id: int, db: Session = Depends(get_db)):
     return crud.get_recipe_comments(db=db, recipe_id=recipe_id)
 
