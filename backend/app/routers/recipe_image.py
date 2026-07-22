@@ -27,8 +27,7 @@ def add_recipe_image(
 
     if recipe.user_id != current_user.id:
         raise HTTPException(
-            status_code=403,
-            detail="You are not the owner of this recipe."
+            status_code=403, detail="You are not the owner of this recipe."
         )
 
     upload_folder = "uploads/recipes"
@@ -40,15 +39,10 @@ def add_recipe_image(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    image_data = RecipeImageCreate(
-        url=f"/{file_path}"
-    )
+    image_data = RecipeImageCreate(url=f"/{file_path}")
 
-    return crud.create_recipe_image(
-        db,
-        recipe_id,
-        image_data
-    )
+    return crud.create_recipe_image(db, recipe_id, image_data)
+
 
 @router.get("/recipes/{recipe_id}/images", response_model=list[RecipeImageResponse])
 def get_recipe_images(recipe_id: int, db: Session = Depends(get_db)):

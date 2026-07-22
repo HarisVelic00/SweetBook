@@ -184,3 +184,35 @@
 .delete-comment:hover {
   transform: scale(1.1);
 }
+
+.recipe-actions {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.edit-recipe-button,
+.delete-recipe-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.edit-recipe-button {
+  background: #4caf50;
+  color: white;
+}
+
+.delete-recipe-button {
+  background: #e53935;
+  color: white;
+}
+
+.edit-recipe-button:hover {
+  background: #43a047;
+}
+
+.delete-recipe-button:hover {
+  background: #d32f2f;
+}

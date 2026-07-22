@@ -58,15 +58,22 @@ def update_recipe(
     return recipe
 
 
-@router.delete("/{recipe_id}", response_model=RecipeResponse)
+@router.delete("/{recipe_id}")
 def delete_recipe(
     recipe_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    recipe = crud.delete_recipe(db=db, recipe_id=recipe_id, user_id=current_user.id)
+    recipe = crud.delete_recipe(
+        db=db,
+        recipe_id=recipe_id,
+        user_id=current_user.id
+    )
 
     if not recipe:
-        raise HTTPException(status_code=404, detail="Recipe not found or not owner")
+        raise HTTPException(
+            status_code=404,
+            detail="Recipe not found or not owner"
+        )
 
-    return recipe
+    return {"message": "Recipe deleted successfully"}

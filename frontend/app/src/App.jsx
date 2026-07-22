@@ -6,6 +6,7 @@ import Recipes from "./pages/Recipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import Ratings from "./pages/Ratings";
 import Favorites from "./pages/Favorites";
+import EditRecipe from "./components/EditRecipe";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="recipes/:id" element={<RecipeDetails />} />
           <Route path="ratings" element={<Ratings />} />
           <Route path="favorites" element={<Favorites />} />
+          <Route path="recipes/:id/edit" element={<EditRecipe />} />
         </Route>
       </Routes>
     </BrowserRouter>

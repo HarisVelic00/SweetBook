@@ -2,6 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel
 from app.schemas.user import UserResponse
 
+
 class CommentCreate(BaseModel):
     text: str
 

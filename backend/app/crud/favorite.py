@@ -16,7 +16,12 @@ def create_favorite(db: Session, favorite: FavoriteCreate, user_id: int):
 
 def get_user_favorites(db: Session, user_id: int):
 
-    return (db.query(Favorite).options(joinedload(Favorite.recipe)).filter(Favorite.user_id == user_id).all())
+    return (
+        db.query(Favorite)
+        .options(joinedload(Favorite.recipe))
+        .filter(Favorite.user_id == user_id)
+        .all()
+    )
 
 
 def get_favorite(db: Session, user_id: int, recipe_id: int):
@@ -29,7 +34,7 @@ def get_favorite(db: Session, user_id: int, recipe_id: int):
 
 
 def get_favorite_count(db: Session, recipe_id: int):
-    return (db.query(Favorite).filter(Favorite.recipe_id==recipe_id).count())
+    return db.query(Favorite).filter(Favorite.recipe_id == recipe_id).count()
 
 
 def delete_favorite(db: Session, user_id: int, recipe_id: int):

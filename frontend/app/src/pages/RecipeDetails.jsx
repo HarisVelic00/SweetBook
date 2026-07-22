@@ -2,6 +2,7 @@ import "../styles/RecipeDetails.css";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useState, useEffect, useTransition } from "react";
 import { API_URL } from "../api/api.js";
+import DeleteRecipeModal from "../components/DeleteRecipeModal.jsx";
 
 function RecipeDetails() {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ function RecipeDetails() {
   const [averageRating, setAverageRating] = useState(0);
   const [ratingCount, setRatingsCount] = useState(0);
   const token = localStorage.getItem("token");
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     async function fetchRecipe() {
@@ -277,6 +280,34 @@ function RecipeDetails() {
     }
   }
 
+  async function deleteRecipe() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${API_URL}/recipes/${recipe.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Delete response:", response.status);
+
+      if (!response.ok) {
+        console.log("Delete failed");
+        return;
+      }
+
+      console.log("Delete successful");
+
+      setShowDeleteModal(false);
+
+      navigate("/home/recipes");
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  }
+
   return (
     <div className="recipe-details">
       <button
@@ -297,7 +328,6 @@ function RecipeDetails() {
         <h1>{recipe.title}</h1>
         <p>{recipe.category_name}</p>
       </div>
-
       {recipe.images.length > 0 ? (
         <img
           src={`${API_URL}${recipe.images[0].url}`}
@@ -308,16 +338,32 @@ function RecipeDetails() {
         <div className="recipe-image">No image available</div>
       )}
 
+      {Number(currentUser?.sub) === recipe.user_id && (
+        <div className="recipe-actions">
+          <button
+            className="edit-recipe-button"
+            onClick={() => navigate(`/home/recipes/${id}/edit`)}
+          >
+            ✏️ Edit Recipe
+          </button>
+
+          <button
+            className="delete-recipe-button"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            🗑 Delete Recipe
+          </button>
+        </div>
+      )}
+
       <div className="recipe-section">
         <h2>Description</h2>
         <p>{recipe.description}</p>
       </div>
-
       <div className="recipe-section">
         <h2>Instructions</h2>
         <p>{recipe.instructions}</p>
       </div>
-
       <div className="recipe-section">
         <h2>Ingredients</h2>
         {recipe.ingredients.length === 0 ? (
@@ -332,7 +378,6 @@ function RecipeDetails() {
           </ul>
         )}
       </div>
-
       <div className="recipe-section">
         <h2>Your Rating</h2>
 
@@ -354,7 +399,6 @@ function RecipeDetails() {
           </div>
         </div>
       </div>
-
       <div className="recipe-section">
         <h2>Favorites</h2>
 
@@ -368,7 +412,6 @@ function RecipeDetails() {
           </button>
         </div>
       </div>
-
       <div className="recipe-section">
         <h2>Leave a Comment</h2>
 
@@ -384,7 +427,6 @@ function RecipeDetails() {
           Post Comment
         </button>
       </div>
-
       <div className="recipe-section">
         <h2>Comments</h2>
 
@@ -407,6 +449,13 @@ function RecipeDetails() {
           </div>
         ))}
       </div>
+
+      {showDeleteModal && (
+        <DeleteRecipeModal
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={deleteRecipe}
+        />
+      )}
     </div>
   );
 }

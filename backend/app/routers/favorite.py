@@ -4,7 +4,11 @@ from sqlalchemy.exc import IntegrityError
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
-from app.schemas.favorite import FavoriteCreate, FavoriteResponse, FavoriteDeleteResponse
+from app.schemas.favorite import (
+    FavoriteCreate,
+    FavoriteResponse,
+    FavoriteDeleteResponse,
+)
 from app.crud import favorite as crud
 
 router = APIRouter(prefix="/favorites", tags=["Favorites"])
@@ -37,11 +41,9 @@ def get_my_favorites(
     return crud.get_user_favorites(db=db, user_id=current_user.id)
 
 
-
 @router.get("/recipe/{recipe_id}/count")
 def get_favorite_count(recipe_id: int, db: Session = Depends(get_db)):
     return crud.get_favorite_count(db, recipe_id)
-
 
 
 @router.delete("/{recipe_id}", response_model=FavoriteDeleteResponse)

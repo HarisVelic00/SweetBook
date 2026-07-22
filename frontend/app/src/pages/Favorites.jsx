@@ -41,22 +41,22 @@ function Favorites() {
         <input type="text" placeholder="Search favorite recipes..." />
       </div>
 
-      <div className="favorites-list"></div>
-
-      {Array.isArray(favorites) && favorites.length > 0 ? (
-        favorites.map((favorite) => (
-          <UserRecipeCard
-            key={favorite.id}
-            recipeId={favorite.recipe.id}
-            title={favorite.recipe.title}
-            category={favorite.recipe.category_name}
-            extra="❤️ Favorite"
-            from="favorites"
-          />
-        ))
-      ) : (
-        <p>You have no favorite recipes.</p>
-      )}
+      <div className="favorites-list">
+        {Array.isArray(favorites) && favorites.length > 0 ? (
+          favorites.map((favorite) => (
+            <UserRecipeCard
+              key={favorite.id}
+              recipeId={favorite.recipe.id}
+              title={favorite.recipe.title}
+              category={favorite.recipe.category_name}
+              extra="❤️ Favorite"
+              from="favorites"
+            />
+          ))
+        ) : (
+          <p>You have no favorite recipes.</p>
+        )}
+      </div>
     </div>
   );
 }

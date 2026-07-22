@@ -55,6 +55,7 @@ function Recipes() {
         {filteredRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
+        <p>No recipes yet.</p>
       </div>
 
       {isModalOpen && (

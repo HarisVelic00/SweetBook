@@ -35,14 +35,19 @@ def get_my_ratings(
 
 
 @router.get("/recipe/{recipe_id}/average")
-def get_average_rating(recipe_id: int, db: Session=Depends(get_db)):
+def get_average_rating(recipe_id: int, db: Session = Depends(get_db)):
     return crud.get_recipe_average(db=db, recipe_id=recipe_id)
 
 
 @router.get("/recipe/{recipe_id}/me", response_model=RatingResponse | None)
-def get_my_recipe_rating(recipe_id: int, db: Session = Depends(get_db), current_user: User=Depends(get_current_user)):
-    return crud.get_user_recipe_rating(db=db,  user_id=current_user.id, recipe_id=recipe_id)
-
+def get_my_recipe_rating(
+    recipe_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return crud.get_user_recipe_rating(
+        db=db, user_id=current_user.id, recipe_id=recipe_id
+    )
 
 
 @router.put("/{recipe_id}", response_model=RatingResponse)

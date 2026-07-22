@@ -17,6 +17,7 @@ class FavoriteResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class FavoriteDeleteResponse(BaseModel):
     id: int
     user_id: int

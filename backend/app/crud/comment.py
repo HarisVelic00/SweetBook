@@ -14,11 +14,7 @@ def create_comment(db: Session, comment: CommentCreate, user_id: int, recipe_id:
 
 
 def get_recipe_comments(db: Session, recipe_id: int):
-    return (
-        db.query(Comment)
-        .filter(Comment.recipe_id == recipe_id)
-        .all()
-    )
+    return db.query(Comment).filter(Comment.recipe_id == recipe_id).all()
 
 
 def delete_comment(db: Session, comment_id: int, user_id: int):

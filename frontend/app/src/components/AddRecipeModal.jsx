@@ -2,7 +2,7 @@ import "../components/AddRecipeModal.css";
 import { useState, useEffect } from "react";
 import { API_URL } from "../api/api.js";
 
-function AddRecipeModal({ onClose, refreshRecipes }) {
+function AddRecipeModal({ onClose, refreshRecipes, recipe, mode }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -14,6 +14,8 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
   const [recipeIngredients, setRecipeIngredients] = useState([]);
   const [ingredientName, setIngredientName] = useState("");
   const [image, setImage] = useState(null);
+  const [existingImage, setExistingImage] = useState(null);
+  const [newIngredients, setNewIngredients] = useState([]);
 
   function showMessage(text, type) {
     setMessage(text);
@@ -35,6 +37,24 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (mode === "edit" && recipe) {
+      setTitle(recipe.title);
+      setDescription(recipe.description || "");
+      setInstructions(recipe.instructions);
+      setCategoryId(recipe.category_id);
+      setRecipeIngredients(
+        recipe.ingredients.map((ingredient) => ({
+          name: ingredient.ingredient_name,
+          quantity: ingredient.quantity,
+        })),
+      );
+      if (recipe.images && recipe.images.length > 0) {
+        setExistingImage(recipe.images[0].url);
+      }
+    }
+  }, [mode, recipe]);
 
   async function getIngredientId(name, token) {
     const response = await fetch(`${API_URL}/ingredients/`);
@@ -74,7 +94,6 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
     try {
       const token = localStorage.getItem("token");
 
-      // 1. Create recipe
       const response = await fetch(`${API_URL}/recipes/`, {
         method: "POST",
         headers: {
@@ -96,7 +115,6 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
         return;
       }
 
-      // 2. Upload image if selected
       if (image) {
         const formData = new FormData();
 
@@ -119,7 +137,6 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
         }
       }
 
-      // 3. Add ingredients
       for (const ingredient of recipeIngredients) {
         const ingredientId = await getIngredientId(ingredient.name, token);
 
@@ -147,7 +164,6 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
         }
       }
 
-      // 4. Success
       showMessage("Recipe created successfully!", "success");
 
       await refreshRecipes();
@@ -175,8 +191,125 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
 
     setRecipeIngredients([...recipeIngredients, newIngredient]);
 
+    if (mode === "edit") {
+      setNewIngredients([...newIngredients, newIngredient]);
+    }
+
     setIngredientName("");
     setQuantity("");
+  }
+
+  async function handleUpdateRecipe() {
+    if (!title || !instructions || !categoryId) {
+      showMessage("Please fill all required fields.", "error");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${API_URL}/recipes/${recipe.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          instructions,
+          category_id: Number(categoryId),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showMessage(data.detail || "Failed to update recipe.", "error");
+        return;
+      }
+
+      for (const ingredient of newIngredients) {
+        const ingredientId = await getIngredientId(ingredient.name, token);
+
+        const ingredientResponse = await fetch(
+          `${API_URL}/recipes/${recipe.id}/ingredients`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              ingredient_id: ingredientId,
+              quantity: ingredient.quantity,
+            }),
+          },
+        );
+
+        if (!ingredientResponse.ok) {
+          showMessage(
+            "Recipe updated, but adding ingredients failed.",
+            "error",
+          );
+          return;
+        }
+      }
+
+      if (image) {
+        // 1. Delete old image
+        if (recipe.images && recipe.images.length > 0) {
+          const oldImageId = recipe.images[0].id;
+
+          const deleteImageResponse = await fetch(
+            `${API_URL}/recipe-images/${oldImageId}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          if (!deleteImageResponse.ok) {
+            showMessage("Failed to remove old image.", "error");
+            return;
+          }
+        }
+
+        // 2. Upload new image
+        const formData = new FormData();
+
+        formData.append("file", image);
+
+        const imageResponse = await fetch(
+          `${API_URL}/recipes/${recipe.id}/images`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          },
+        );
+
+        if (!imageResponse.ok) {
+          showMessage("Recipe updated, but image upload failed.", "error");
+          return;
+        }
+      }
+
+      await refreshRecipes();
+      showMessage("Recipe updated successfully!", "success");
+
+      setTimeout(() => {
+        onClose();
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+
+      showMessage("Unable to connect to server.", "error");
+    }
   }
 
   return (
@@ -266,12 +399,20 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
             onChange={(e) => setImage(e.target.files[0])}
           />
 
-          {image && (
+          {image ? (
             <img
               src={URL.createObjectURL(image)}
               alt="preview"
               className="image-preview"
             />
+          ) : (
+            existingImage && (
+              <img
+                src={`${API_URL}${existingImage}`}
+                alt="recipe"
+                className="image-preview"
+              />
+            )
           )}
         </div>
 
@@ -281,8 +422,11 @@ function AddRecipeModal({ onClose, refreshRecipes }) {
             Cancel
           </button>
 
-          <button className="create-button" onClick={handleCreateRecipe}>
-            Create Recipe
+          <button
+            className="create-button"
+            onClick={mode === "edit" ? handleUpdateRecipe : handleCreateRecipe}
+          >
+            {mode === "edit" ? "Update Recipe" : "Create Recipe"}
           </button>
         </div>
       </div>

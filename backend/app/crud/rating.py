@@ -33,24 +33,14 @@ def get_recipe_average(db: Session, recipe_id: int):
     ratings = get_recipe_ratings(db, recipe_id)
 
     if not ratings:
-        return {
-            "average": 0,
-            "count":0
-        }
-    average = sum(r.value for r in ratings)/len(ratings)
+        return {"average": 0, "count": 0}
+    average = sum(r.value for r in ratings) / len(ratings)
 
-    return {
-        "average": round(average, 1),
-        "count": len(ratings)
-    }
+    return {"average": round(average, 1), "count": len(ratings)}
 
 
 def get_user_recipe_rating(db: Session, user_id: int, recipe_id: int):
-    return get_rating(
-        db=db,
-        user_id=user_id,
-        recipe_id=recipe_id
-    )
+    return get_rating(db=db, user_id=user_id, recipe_id=recipe_id)
 
 
 def update_rating(db: Session, user_id: int, recipe_id: int, rating: RatingUpdate):
